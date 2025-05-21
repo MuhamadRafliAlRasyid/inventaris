@@ -29,6 +29,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'bagian_id',
         'role',
     ];
 
@@ -64,5 +65,28 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
+
+    public function bagian()
+    {
+        return $this->belongsTo(Bagian::class);
+    }
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isUser()
+    {
+        return $this->role === 'user';
+    }
+
+    public function isSpv()
+    {
+        return $this->role === 'spv';
     }
 }

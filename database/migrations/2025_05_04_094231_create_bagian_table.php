@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('permintaans', function (Blueprint $table) {
+        Schema::create('bagian', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('barangs_id')->constrained()->onUpdate('cascade')->onDelete('restrict');
-            $table->integer('jumlah');
+            $table->string('nama');
             $table->timestamps();
         });
     }
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('permintaans');
+        Schema::dropIfExists('bagian');
     }
 };

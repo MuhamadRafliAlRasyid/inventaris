@@ -21,7 +21,8 @@ return new class extends Migration
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
-            $table->foreignId('bagians_id')->constrained()->onUpdate('cascade')->onDelete('restrict');
+            // Remove the unsignedBigInteger definition for 'bagian_id'
+            $table->foreignId('bagian_id')->nullable()->constrained('bagian')->onUpdate('cascade')->onDelete('restrict');
             $table->enum('role', ['admin', 'user', 'spv'])->default('user');
         });
 
