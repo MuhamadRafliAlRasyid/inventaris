@@ -1,114 +1,105 @@
-{{-- resources/views/auth/register.blade.php --}}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Inventory Signup</title>
+    <title>Inventory Sign Up</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <style>
-        .password-toggle-button {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: white;
-            font-size: 1rem;
+        @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
 
-<body class="bg-white min-h-screen flex flex-col items-center justify-center p-6">
-    <div class="flex items-center space-x-1 mb-10">
-        <img alt="Inventory logo" class="w-16 h-16" src="assets/logos.png" />
-        <h1 class="text-5xl font-sans font-normal">
-            <span class="text-orange-600">Inven</span><span class="text-blue-800">tory</span>
-        </h1>
+<body class="bg-white min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-md">
+        <div class="flex justify-center mb-10">
+            <div class="flex items-center border border-gray-200 rounded-md px-3 py-2">
+                <img alt="Inventory logo" class="w-6 h-6" src="{{ asset('assets/logos.png') }}" />
+                <span class="ml-2 text-xs font-semibold text-black">INVENTORY</span>
+            </div>
+        </div>
+
+        @if ($errors->any())
+            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-sm">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('register') }}" class="space-y-5">
+            @csrf
+
+            <div>
+                <label for="name" class="block text-xs font-normal text-gray-700 mb-1">Full Name</label>
+                <input id="name" name="name" type="text" value="{{ old('name') }}" required
+                    class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
+                    placeholder="Your name">
+            </div>
+
+            <div>
+                <label for="email" class="block text-xs font-normal text-gray-700 mb-1">Email</label>
+                <input id="email" name="email" type="email" value="{{ old('email') }}" required
+                    class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
+                    placeholder="you@example.com">
+            </div>
+
+            <div>
+                <label for="password" class="block text-xs font-normal text-gray-700 mb-1">Password</label>
+                <div class="relative">
+                    <input id="password" name="password" type="password" required
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
+                        placeholder="********">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm cursor-pointer"
+                        onclick="toggleVisibility('password', this)">
+                        <i class="fas fa-eye-slash"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div>
+                <label for="password_confirmation" class="block text-xs font-normal text-gray-700 mb-1">Confirm
+                    Password</label>
+                <div class="relative">
+                    <input id="password_confirmation" name="password_confirmation" type="password" required
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
+                        placeholder="********">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm cursor-pointer"
+                        onclick="toggleVisibility('password_confirmation', this)">
+                        <i class="fas fa-eye-slash"></i>
+                    </span>
+                </div>
+            </div>
+
+            <button type="submit"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-normal rounded-md py-2">
+                Sign Up
+            </button>
+        </form>
+
+        <p class="text-center text-sm text-gray-600 mt-4">
+            Already have an account?
+            <a href="{{ route('login') }}" class="text-blue-600 hover:underline font-medium">Sign In</a>
+        </p>
     </div>
 
-    @if ($errors->any())
-        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded w-full max-w-sm">
-            <ul class="list-disc list-inside text-sm">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <form method="POST" action="{{ route('register') }}" class="w-full max-w-sm space-y-6 relative">
-        @csrf
-
-        <div>
-            <label class="block text-black mb-1" for="name">Username</label>
-            <input id="name" name="name" type="text" value="{{ old('name') }}" required autofocus
-                autocomplete="name" class="w-full rounded-lg bg-blue-800 h-12 px-4 text-white focus:outline-none"
-                placeholder="Your full name" />
-        </div>
-
-        <div>
-            <label class="block text-black mb-1" for="email">Gmail</label>
-            <input id="email" name="email" type="email" value="{{ old('email') }}" required
-                autocomplete="email" class="w-full rounded-lg bg-blue-800 h-12 px-4 text-white focus:outline-none"
-                placeholder="you@example.com" />
-        </div>
-
-        <div class="relative">
-            <label class="block text-black mb-1" for="password">Password</label>
-            <div class="relative">
-                <input id="password" name="password" type="password" required autocomplete="new-password"
-                    class="w-full rounded-lg bg-blue-800 h-12 px-4 pr-10 text-white focus:outline-none"
-                    placeholder="********" />
-                <span id="togglePassword"
-                    class="absolute inset-y-0 right-3 flex items-center text-white cursor-pointer text-lg">
-                    <i class="fas fa-eye"></i>
-                </span>
-            </div>
-        </div>
-
-        <div class="relative">
-            <label class="block text-black mb-1" for="password_confirmation">Confirm Password</label>
-            <div class="relative">
-                <input id="password_confirmation" name="password_confirmation" type="password" required
-                    autocomplete="new-password"
-                    class="w-full rounded-lg bg-blue-800 h-12 px-4 pr-10 text-white focus:outline-none"
-                    placeholder="********" />
-                <span id="togglePasswordConfirmation"
-                    class="absolute inset-y-0 right-3 flex items-center text-white cursor-pointer text-lg">
-                    <i class="fas fa-eye"></i>
-                </span>
-            </div>
-        </div>
-
-
-        <button type="submit"
-            class="w-full rounded-lg bg-blue-800 h-12 text-white text-lg font-semibold hover:bg-blue-900 transition">
-            Create Account
-        </button>
-
-        <p class="text-center text-sm text-gray-600">
-            Already have an account?
-            <a href="{{ route('login') }}" class="text-blue-800 font-semibold hover:underline ml-1">Login</a>
-        </p>
-    </form>
-
     <script>
-        const togglePassword = document.getElementById('togglePassword');
-        const passwordInput = document.getElementById('password');
-        togglePassword.addEventListener('click', () => {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-        });
-
-        const togglePasswordConfirmation = document.getElementById('togglePasswordConfirmation');
-        const passwordConfirmationInput = document.getElementById('password_confirmation');
-        togglePasswordConfirmation.addEventListener('click', () => {
-            const type = passwordConfirmationInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordConfirmationInput.setAttribute('type', type);
-        });
+        function toggleVisibility(id, iconElement) {
+            const input = document.getElementById(id);
+            const icon = iconElement.querySelector('i');
+            const isPassword = input.getAttribute('type') === 'password';
+            input.setAttribute('type', isPassword ? 'text' : 'password');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        }
     </script>
 </body>
 
