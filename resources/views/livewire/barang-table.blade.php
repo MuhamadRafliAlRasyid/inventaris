@@ -1,67 +1,97 @@
-<div class="overflow-x-auto max-w-4xl mx-auto">
-    <!-- Input Pencarian -->
-    <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-semibold text-blue-800">Daftar Barang</h2>
-        <input type="text" wire:model.debounce.300ms="search" placeholder="Cari barang..."
-            class="border border-gray-300 rounded px-4 py-2 w-64 focus:outline-none focus:ring" />
+<div class="max-w-6xl mx-auto">
+    <h1 class="text-lg font-semibold mb-1">Product</h1>
+    <div class="flex items-center text-xs text-gray-500 mb-4 select-none">
+        <span>Stok Barang</span>
+        <i class="fas fa-chevron-right mx-1"></i>
+        <span>Item</span>
     </div>
 
-    <!-- Tabel -->
-    <div class="bg-[#1e49e2] text-white rounded-md shadow-lg">
-        <div class="max-h-[500px] overflow-y-auto">
-            <table class="w-full min-w-[600px]">
-                <thead class="sticky top-0 bg-[#1641c2] z-10">
-                    <tr>
-                        <th class="p-3 text-left">No</th>
-                        <th class="p-3 text-center">Foto</th>
-                        <th class="p-3 text-left">Nama</th>
-                        <th class="p-3 text-center">Stok</th>
-                        <th class="p-3 text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="text-white">
-                    @forelse ($barang as $index => $item)
-                        <tr class="hover:bg-[#2a5ae8] transition">
-                            <td class="text-center p-2">{{ $barang->firstItem() + $index }}</td>
-                            <td class="text-center p-2">
-                                <img src="{{ asset('img/' . $item->foto_barang) }}"
-                                    class="w-12 h-12 rounded object-cover mx-auto" />
-                            </td>
-                            <td class="p-2">{{ $item->nama_barang }}</td>
-                            <td class="text-center p-2">{{ $item->stok }}</td>
-                            <td class="text-center p-2">
-                                @if (auth()->user()->role === 'admin')
-                                    <a href="{{ route('barangs.edit', $item->id) }}"
-                                        class="bg-white text-blue-600 px-3 py-1 rounded-md text-sm font-semibold shadow hover:bg-gray-100">Edit</a>
-                                    <form action="{{ route('barangs.destroy', $item->id) }}" method="POST"
-                                        class="inline-block" onsubmit="return confirm('Yakin ingin menghapus?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="bg-red-600 text-white px-3 py-1 rounded-md text-sm font-semibold hover:bg-red-700">
-                                            Hapus
-                                        </button>
-                                    </form>
-                                @elseif (auth()->user()->role === 'user')
-                                    <a href="{{ route('permintaan.create', ['barang_id' => $item->id]) }}"
-                                        class="bg-green-600 text-white px-3 py-1 rounded-md text-sm font-semibold shadow hover:bg-green-700">
-                                        Ajukan Permintaan
-                                    </a>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center py-4">Tidak ada data ditemukan.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+    <!-- Search Bar -->
+    <div
+        class="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white border border-gray-200 rounded-xl p-4 space-y-4 sm:space-y-0">
+        <form class="flex items-center w-full sm:w-96 border border-gray-300 rounded-lg overflow-hidden">
+            <input wire:model.debounce.300ms="search" placeholder="Search for id, name item"
+                class="flex-grow px-4 py-2 text-xs text-gray-500 placeholder-gray-400 focus:outline-none"
+                type="text" />
+            <button type="submit" class="px-3 text-gray-500 hover:text-gray-700 focus:outline-none">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
 
-        <!-- Pagination -->
-        <div class="p-4 bg-blue-100 text-blue-800 rounded-b-md">
-            {{ $barang->links() }}
+        <div class="flex items-center space-x-2">
+            <!-- Admin-only button -->
+            @if (auth()->user()->role === 'admin')
+                <a href="{{ route('barangs.create') }}"
+                    class="flex items-center text-xs text-white bg-blue-600 hover:bg-blue-700 rounded-md px-4 py-2">
+                    Add Item <i class="fas fa-plus ml-1"></i>
+                </a>
+            @endif
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="mt-4 border border-gray-200 rounded-xl overflow-hidden text-xs text-gray-700">
+        <table class="w-full border-collapse">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-4 py-3 text-left">No</th>
+                    <th class="px-4 py-3 text-left">Product</th>
+                    <th class="px-4 py-3 text-center">Stok</th>
+                    <th class="px-4 py-3 text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($barang as $index => $item)
+                    <tr class="border-t border-gray-100 hover:bg-gray-50">
+                        <td class="px-4 py-3">{{ $barang->firstItem() + $index }}</td>
+                        <td class="px-4 py-3 flex items-center space-x-3">
+                            <img src="{{ asset('img/' . $item->foto_barang) }}" alt="{{ $item->nama_barang }}"
+                                class="w-6 h-6 rounded object-cover" />
+                            <div class="leading-tight text-left">
+                                <span
+                                    class="text-blue-600 text-xs font-semibold">{{ $item->kode_barang ?? 'Kode-' . $item->id }}</span>
+                                <div class="text-gray-500 text-[10px]">{{ $item->nama_barang }}</div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-center">{{ $item->stok }}</td>
+                        <td class="px-4 py-3 text-center space-x-2">
+                            @if (auth()->user()->role === 'admin')
+                                <a href="{{ route('barangs.edit', $item->id) }}"
+                                    class="text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ route('barangs.destroy', $item->id) }}" method="POST"
+                                    class="inline-block" onsubmit="return confirm('Yakin ingin menghapus?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            @elseif (auth()->user()->role === 'user')
+                                <a href="{{ route('permintaan.create', ['barang_id' => $item->id]) }}"
+                                    class="bg-green-600 text-white px-3 py-1 rounded-md text-xs font-semibold hover:bg-green-700">
+                                    Ajukan
+                                </a>
+                            @endif
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="text-center py-4">Tidak ada data ditemukan.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-4 text-xs text-gray-500 flex justify-between items-center">
+        <div>
+            Menampilkan {{ $barang->firstItem() }} - {{ $barang->lastItem() }} dari {{ $barang->total() }} data
+        </div>
+        <div>
+            {{ $barang->links('pagination::tailwind') }}
         </div>
     </div>
 </div>
