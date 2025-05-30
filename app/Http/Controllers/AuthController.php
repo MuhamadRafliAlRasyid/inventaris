@@ -56,7 +56,7 @@ class AuthController extends Controller
                 case 'admin':
                     return redirect()->route('admin.index');
                 case 'spv':
-                    return redirect()->route('spv.dashboard');
+                    return redirect()->route('permintaan.index');
                 default:
                     return redirect()->route('barangs.index');
             }

@@ -13,14 +13,21 @@ return new class extends Migration
     {
         Schema::create('permintaan', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('barang_id'); // Define the barang_id column
-            $table->foreign('barang_id') // Define the foreign key constraint
-                ->references('id') // Reference the id column on the barang table
-                ->on('barang') // Specify the barang table
-                ->onDelete('restrict') // Define the delete behavior
-                ->onUpdate('cascade'); // Define the update behavior
-            $table->integer('jumlah');
+
+            // User yang membuat permintaan
+            $table->unsignedBigInteger('user_id');
+
+            // User yang mengetahui dan menyetujui (nullable)
+            $table->unsignedBigInteger('mengetahui')->nullable();
+            $table->unsignedBigInteger('approval')->nullable();
+
+
             $table->timestamps();
+
+            // Foreign keys
+            $table->foreign('id_user')->references('id')->on('users')->onDelete('restrict');
+            $table->foreign('mengetahui')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('approval')->references('id')->on('users')->onDelete('set null');
         });
     }
 

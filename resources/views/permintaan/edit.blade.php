@@ -4,7 +4,7 @@
     <div class="max-w-xl mx-auto mt-10 bg-white p-6 rounded shadow">
         <h2 class="text-xl font-semibold mb-4">Edit Permintaan</h2>
 
-        <form action="{{ route('permintaan.user.update', $permintaan->id) }}" method="POST">
+        <form action="{{ route('permintaan.update', $permintaan->id) }}" method="POST">
             @csrf
             @method('PUT')
 

@@ -17,8 +17,6 @@
         <input id="profile_photo" name="profile_photo" type="file" class="hidden" accept="image/*">
     </div>
 
-
-    <!-- Mulai form field -->
     <!-- Name -->
     <div>
         <label class="block font-semibold mb-1" for="name">Nama</label>
@@ -42,34 +40,37 @@
             class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
     </div>
 
-    <!-- Bagian -->
-    <div>
-        <label class="block font-semibold mb-1" for="bagian_id">Bagian</label>
-        <select id="bagian_id" name="bagian_id"
-            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
-            <option value="">- Pilih Bagian -</option>
-            @foreach ($bagians as $bagian)
-                <option value="{{ $bagian->id }}"
-                    {{ old('bagian_id', $user->bagian_id ?? '') == $bagian->id ? 'selected' : '' }}>
-                    {{ $bagian->nama }}
-                </option>
-            @endforeach
-        </select>
-    </div>
+    @if (auth()->user()->role === 'admin')
+        <!-- Bagian (Hanya admin yang bisa lihat dan ubah) -->
+        <div>
+            <label class="block font-semibold mb-1" for="bagian_id">Bagian</label>
+            <select id="bagian_id" name="bagian_id"
+                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <option value="">- Pilih Bagian -</option>
+                @foreach ($bagians as $bagian)
+                    <option value="{{ $bagian->id }}"
+                        {{ old('bagian_id', $user->bagian_id ?? '') == $bagian->id ? 'selected' : '' }}>
+                        {{ $bagian->nama }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
-    <!-- Role -->
-    <div>
-        <label class="block font-semibold mb-1" for="role">Role</label>
-        <select id="role" name="role" required
-            class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
-            @foreach (['admin', 'user', 'spv'] as $role)
-                <option value="{{ $role }}" {{ old('role', $user->role ?? '') == $role ? 'selected' : '' }}>
-                    {{ ucfirst($role) }}
-                </option>
-            @endforeach
-        </select>
-    </div>
+        <!-- Role (Hanya admin yang bisa ubah) -->
+        <div>
+            <label class="block font-semibold mb-1" for="role">Role</label>
+            <select id="role" name="role" required
+                class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500">
+                @foreach (['admin', 'user', 'spv'] as $role)
+                    <option value="{{ $role }}" {{ old('role', $user->role ?? '') == $role ? 'selected' : '' }}>
+                        {{ ucfirst($role) }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    @endif
 </section>
+
 <script>
     document.getElementById('profile_photo').addEventListener('change', function(event) {
         const file = event.target.files[0];

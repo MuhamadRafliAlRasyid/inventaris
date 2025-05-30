@@ -12,13 +12,14 @@ class Permintaan extends Model
     protected $table = 'permintaan';
 
     protected $fillable = [
-        'barang_id',
-        'jumlah',
-        'id_user',
+        'user_id',
         'mengetahui',
         'approval',
-        'keterangan',
     ];
+    public function details()
+    {
+        return $this->hasMany(DetailPermintaan::class);
+    }
 
     // Relasi
     public function barang()
@@ -28,8 +29,9 @@ class Permintaan extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(User::class); // Tidak perlu definisikan foreign key jika namanya 'user_id'
     }
+
 
 
     public function mengetahuiUser()

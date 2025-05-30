@@ -1,15 +1,14 @@
-<!-- layout.blade.php -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Inventory</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('assets/1.png') }}?v={{ time() }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
     @livewireStyles
     <style>
@@ -19,117 +18,115 @@
     </style>
 </head>
 
-<body class="bg-gray-100 text-gray-700">
-
-    <div class="flex min-h-screen">
-
-        <!-- Sidebar -->
-        <aside class="w-64 bg-white shadow-xl flex flex-col justify-between border-r">
-            <div class="p-6">
-                <!-- Logo -->
-                <div class="flex items-center gap-3 mb-6">
-                    <img src="{{ asset('assets/logos.png') }}" alt="Logo" class="w-8 h-8">
-                    <h1 class="text-xl font-bold text-gray-800">INVENTORY</h1>
-                </div>
-
-                <!-- User Info -->
-                @auth
-                    <div class="mb-6">
-                        <p class="font-semibold">{{ Auth::user()->name }}</p>
-                        <p class="text-sm text-gray-400 capitalize">{{ Auth::user()->role }}</p>
+<body class="bg-gray-100 text-gray-700 h-screen overflow-hidden">
+    @auth
+        <!-- Header Navbar -->
+        <header class="bg-white shadow-sm px-6 py-3 flex items-center justify-between border-b fixed w-full z-10 h-16">
+            <div class="flex items-center space-x-3">
+                <img src="{{ asset('assets/logos.png') }}" alt="Logo" class="w-6 h-6">
+                <h1 class="text-lg font-bold text-gray-800">INVENTORY</h1>
+            </div>
+            <div class="w-full max-w-md mx-8">
+                <form action="#" method="GET" class="relative">
+                    <input type="text" name="search" placeholder="Search item"
+                        class="w-full border border-gray-300 rounded-full px-4 py-2 pl-10 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </form>
+            </div>
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-bell text-gray-500 text-lg hover:text-blue-500 cursor-pointer"></i>
+                <div class="flex items-center gap-2">
+                    <img src="{{ asset('img/profile_photo/' . Auth::user()->profile_photo_path) }}"
+                        class="w-8 h-8 rounded-full border" alt="User Avatar">
+                    <div class="text-sm">
+                        <p class="font-medium text-gray-800">{{ Auth::user()->name }}</p>
+                        <p class="text-xs text-gray-500 capitalize">{{ Auth::user()->role }}</p>
                     </div>
-
-                    <!-- Menu -->
-                    <nav class="space-y-1">
-                        <p class="uppercase text-gray-400 text-xs mb-2">Dashboard</p>
-                        @if (Auth::user()->role === 'user')
-                            <a href="{{ route('barangs.index') }}"
-                                class="flex items-center px-3 py-2 rounded hover:bg-blue-50 text-gray-700">
-                                <i class="fas fa-box mr-2 w-5"></i> Stok Barang
-                            </a>
-                            <a href="{{ route('permintaan.index') }}"
-                                class="flex items-center px-3 py-2 rounded hover:bg-blue-50 text-gray-700">
-                                <i class="fas fa-hand-holding mr-2 w-5"></i> Permintaan
-                            </a>
-                        @elseif (Auth::user()->role === 'spv')
-                            <a href="{{ route('permintaan.index') }}"
-                                class="flex items-center px-3 py-2 rounded hover:bg-blue-50 text-gray-700">
-                                <i class="fas fa-file-alt mr-2 w-5"></i> Permintaan
-                            </a>
-                            <a href="#" class="flex items-center px-3 py-2 rounded hover:bg-blue-50 text-gray-700">
-                                <i class="fas fa-chart-bar mr-2 w-5"></i> Laporan
-                            </a>
-                        @elseif (Auth::user()->role === 'admin')
-                            <a href="{{ route('barangs.index') }}"
-                                class="flex items-center px-3 py-2 rounded hover:bg-blue-50 text-gray-700">
-                                <i class="fas fa-boxes mr-2 w-5"></i> Stok Barang
-                            </a>
-                            <a href="{{ route('permintaan.index') }}"
-                                class="flex items-center px-3 py-2 rounded hover:bg-blue-50 text-gray-700">
-                                <i class="fas fa-tasks mr-2 w-5"></i> Daftar Permintaan
-                            </a>
-                            <a href="{{ route('admin.index') }}"
-                                class="flex items-center px-3 py-2 rounded hover:bg-blue-50 text-gray-700">
-                                <i class="fas fa-users mr-2 w-5"></i> Daftar Anggota
-                            </a>
-                        @endif
-                    </nav>
-                @endauth
-
-                <!-- Tools -->
-                <div class="mt-6">
-                    <p class="uppercase text-gray-400 text-xs mb-2">Tools</p>
-                    <a href="{{ route('admin.edit', Auth::user()->id) }}"
-                        class="flex items-center px-3 py-2 rounded hover:bg-gray-100 text-sm text-gray-600">
-                        <i class="fas fa-user-cog mr-2 w-5"></i> Account & Security
-                    </a>
-                    <a href="{{ route('logout') }}"
-                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                        class="flex items-center px-3 py-2 rounded hover:bg-gray-100 text-sm text-red-600">
-                        <i class="fas fa-sign-out-alt mr-2 w-5"></i> Logout
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
                 </div>
             </div>
+        </header>
+    @endauth
+
+    <div class="flex pt-16 h-full">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r flex flex-col justify-between px-6 py-6 fixed h-full">
+            <div>
+                @auth
+                    <div class="mb-10">
+                        <h1 class="text-xl font-bold text-gray-700 mb-4">Dashboard</h1>
+                        <ul class="space-y-4 text-gray-700">
+                            @if (Auth::user()->role === 'user')
+                                <li><a href="{{ route('barangs.index') }}"
+                                        class="text-base flex items-center gap-2 hover:text-blue-600"><i
+                                            class="fas fa-box"></i> Stok Barang</a></li>
+                                <li><a href="{{ route('permintaan.index') }}"
+                                        class="text-base flex items-center gap-2 hover:text-blue-600"><i
+                                            class="fas fa-hand-holding"></i> Permintaan</a></li>
+                                <li><a href="{{ route('permintaan.laporan') }}"
+                                        class="text-base flex items-center gap-2 hover:text-blue-600"><i
+                                            class="fas fa-print"></i> Laporan</a></li>
+                            @elseif (Auth::user()->role === 'spv')
+                                <li><a href="{{ route('permintaan.index') }}"
+                                        class="text-base flex items-center gap-2 hover:text-blue-600"><i
+                                            class="fas fa-file-alt"></i> Permintaan</a></li>
+                            @elseif (Auth::user()->role === 'admin')
+                                <li><a href="{{ route('barangs.index') }}"
+                                        class="text-base flex items-center gap-2 hover:text-blue-600"><i
+                                            class="fas fa-boxes"></i> Stok Barang</a></li>
+                                <li><a href="{{ route('permintaan.index') }}"
+                                        class="text-base flex items-center gap-2 hover:text-blue-600"><i
+                                            class="fas fa-tasks"></i> Daftar Permintaan</a></li>
+                                <li><a href="{{ route('admin.index') }}"
+                                        class="text-base flex items-center gap-2 hover:text-blue-600"><i
+                                            class="fas fa-users"></i> Daftar User</a></li>
+                            @endif
+                        </ul>
+                    </div><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                    <div class="text-gray-700 pt-8 border-t mt-5">
+                        <h2 class="text-xl font-bold text-gray-700 mb-3">Tools</h2>
+                        <ul class="space-y-4">
+                            <li>
+                                <a href="{{ route('admin.edit', Auth::user()->id) }}"
+                                    class="text-base flex items-center gap-2 hover:text-blue-600">
+                                    <i class="fas fa-user-cog"></i> Account & Security
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                    class="text-base flex items-center gap-2 text-red-600 hover:text-red-800">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                @endauth
+            </div>
+
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 p-6 bg-gray-50 overflow-auto">
-            <!-- Navbar -->
+        <main class="flex-1 ml-64 overflow-y-auto p-8">
             @php
                 $route = request()->route()->getName();
-
                 $breadcrumbs = [
                     'barangs.index' => 'Stok Barang',
                     'permintaan.index' => 'Permintaan',
                     'admin.index' => 'Daftar Anggota',
+                    'admin.edit' => 'Edit User',
                     'dashboard' => 'Dashboard',
-                    // Tambahkan sesuai route lainnya
                 ];
-
                 $breadcrumb = $breadcrumbs[$route] ?? 'Halaman';
             @endphp
 
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h2 class="text-xl font-bold text-gray-800">Masukan Item</h2>
-                    <nav class="text-sm text-gray-500">
-                        Dashboard <span class="mx-1">›</span>
-                        <span class="text-blue-600">{{ $breadcrumb }}</span>
-                    </nav>
-                </div>
-
-                <div class="flex items-center gap-4">
-                    <i class="fas fa-bell text-gray-400 text-lg"></i>
-                    <div class="flex items-center gap-2">
-                        <img src="{{ asset('img/profile_photo/' . Auth::user()->profile_photo_path) }}"
-                            class="w-8 h-8 rounded-full border" alt="User Avatar">
-                        <div class="text-sm">
-                            <p class="font-medium">{{ Auth::user()->name }}</p>
-                            <p class="text-xs text-gray-400 capitalize">{{ Auth::user()->role }}</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Masukan Item</h2>
+                <nav class="text-sm text-gray-500">
+                    Dashboard <span class="mx-1">&rsaquo;</span>
+                    <span class="text-blue-600">{{ $breadcrumb }}</span>
+                </nav>
             </div>
 
             <!-- Page Content -->

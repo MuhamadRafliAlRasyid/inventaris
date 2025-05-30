@@ -15,7 +15,7 @@ class BarangTable extends Component
     public function render()
     {
         $barang = Barang::where('nama_barang', 'like', '%' . $this->search . '%')
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->paginate(10);
 
         return view('livewire.barang-table', [

@@ -59,18 +59,22 @@ Route::middleware([
         Route::delete('/{user}',    [UserController::class, 'destroy'])->name('destroy');
     });
 });
-// Route::middleware(['auth', 'role:user,admin,spv'])->group(function () {
-//     Route::get('/permintaan', [PermintaanController::class, 'indexUser'])->name('permintaan.index');
-// });
+
+Route::get('/permintaan/user/edit-multiple', [PermintaanController::class, 'editMultiple'])->name('permintaan.user.editMultiple');
+Route::put('/permintaan/user/update-multiple', [PermintaanController::class, 'updateMultiple'])->name('permintaan.user.updateMultiple');
+Route::get('/permintaan/{id}/cetak', [PermintaanController::class, 'cetak'])->name('permintaan.cetak');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/permintaan', [PermintaanController::class, 'indexUser'])->name('permintaan.index');
+    Route::get('/permintaan/laporan', [PermintaanController::class, 'laporan'])->name('permintaan.laporan');
 });
 
-// USER - Ajukan permintaan
 // USER - Ajukan dan edit permintaan sendiri
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/permintaan/create', [PermintaanController::class, 'create'])->name('permintaan.create');
     Route::post('/permintaan/store', [PermintaanController::class, 'store'])->name('permintaan.store');
+    Route::delete('/permintaan/{id}', [PermintaanController::class, 'destroyUser'])->name('permintaan.destroyUser');
+
 
     // Tambahan untuk edit permintaan sendiri
     Route::get('/permintaan/{id}/edit', [PermintaanController::class, 'editUser'])->name('permintaan.user.edit');
@@ -82,6 +86,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 Route::middleware(['auth', 'role:spv'])->group(function () {
     Route::get('/permintaan/spv', [PermintaanController::class, 'indexSpv'])->name('permintaan.spv.index');
     Route::post('/permintaan/spv/setujui/{id}', [PermintaanController::class, 'setujuiSpv'])->name('permintaan.spv.setujui');
+    Route::get('/permintaan/spv/detail/{id}', [PermintaanController::class, 'detailSpv'])->name('permintaan.spv.detail');
 });
 
 // Admin - Menyetujui permintaan final
