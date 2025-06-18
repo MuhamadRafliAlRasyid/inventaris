@@ -20,12 +20,13 @@ return new class extends Migration
             // User yang mengetahui dan menyetujui (nullable)
             $table->unsignedBigInteger('mengetahui')->nullable();
             $table->unsignedBigInteger('approval')->nullable();
-
+            $table->dateTime('approval_time')->nullable();
+            $table->string('satuan')->nullable();
 
             $table->timestamps();
 
             // Foreign keys
-            $table->foreign('id_user')->references('id')->on('users')->onDelete('restrict');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->foreign('mengetahui')->references('id')->on('users')->onDelete('set null');
             $table->foreign('approval')->references('id')->on('users')->onDelete('set null');
         });

@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class DetailPermintaan extends Model
 {
-    protected $table = 'detail_permintaan'; // pastikan sesuai dengan nama tabelmu
+    protected $table = 'detail_permintaan';     
 
     protected $fillable = [
         'permintaan_id',
         'barang_id',
         'jumlah',
-        'satuan',       // baru
-        'tanggal',      // baru
+        'satuan',       
+        'tanggal',      
         'keterangan'
     ];
 

@@ -2,12 +2,27 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Print Permintaan</title>
+    <meta charset="utf-8">
+    <title>Detail Permintaan Barang</title>
     <style>
         body {
-            font-family: sans-serif;
-            font-size: 14px;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .header img {
+            width: 60px;
+            float: left;
+        }
+
+        .header .info {
+            text-align: right;
+            margin-left: 70px;
         }
 
         table {
@@ -19,20 +34,46 @@
         th,
         td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 6px;
+            text-align: center;
         }
 
-        th {
-            background-color: #f0f0f0;
+        .ttd {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .ttd div {
+            display: inline-block;
+            width: 40%;
+        }
+
+        .ttd .name {
+            margin-top: 60px;
+            font-weight: bold;
+            text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
-    <h2>Detail Permintaan</h2>
 
-    <p><strong>Nama User:</strong> {{ $permintaan->user->name }}</p>
-    <p><strong>Tanggal:</strong> {{ $permintaan->created_at->format('d-m-Y') }}</p>
+    <div class="header">
+        <img src="{{ public_path('assets/logos.png') }}" alt="Logo">
+        <div class="info">
+            <strong>DISPERINDAG KAB. KARAWANG</strong><br>
+            Jl. Jend. A. Yani No.10, Karangpawitan<br>
+            Kec. Karawang Barat, Karawang, Jawa Barat 41315<br>
+            Telp. (0267) 845 0633
+        </div>
+    </div>
+
+    <hr>
+
+    <h3 style="text-align:center;">Detail Permintaan Barang</h3>
+
+    <p><strong>Nama Pengaju:</strong> {{ $permintaan->user->name }}</p>
+    <p><strong>Tanggal Pengajuan:</strong> {{ \Carbon\Carbon::parse($permintaan->created_at)->format('d-m-Y') }}</p>
 
     <table>
         <thead>
@@ -59,9 +100,32 @@
         </tbody>
     </table>
 
-    <br><br>
-    <p><strong>Mengetahui:</strong> {{ $permintaan->mengetahuiUser->name ?? '-' }}</p>
-    <p><strong>Disetujui:</strong> {{ $permintaan->approvalUser->name ?? '-' }}</p>
+    <div class="ttd">
+        <div>
+            Mengetahui,<br><br>
+            @if ($permintaan->mengetahui != null)
+                <img src="{{ public_path('assets/ok.png') }}" style="width: 80px; margin-bottom: -20px;" alt="Approved">
+            @endif
+            <br>
+            <div class="name">
+                {{ $permintaan->mengetahuiUser->name ?? '................................' }}
+            </div>
+
+        </div>
+        <div>
+            Disetujui,<br><br>
+            @if ($permintaan->approval != null)
+                <img src="{{ public_path('assets/ok.png') }}" style="width: 80px; margin-bottom: -20px;"
+                    alt="Approved">
+            @endif <br>
+            <div class="name">
+                {{ $permintaan->approvalUser->name ?? '................................' }}
+            </div>
+        </div>
+    </div>
+
+
+
 </body>
 
 </html>

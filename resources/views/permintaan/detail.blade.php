@@ -32,14 +32,30 @@
             </tbody>
         </table>
 
-        <div class="mt-6">
-            <form action="{{ route('permintaan.spv.setujui', $permintaan->id) }}" method="POST">
-                @csrf
-                <button type="submit"
-                    class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 text-sm font-semibold">
-                    Setujui Permintaan
-                </button>
-            </form>
-        </div>
+        {{-- Tombol Mengetahui untuk SPV --}}
+        @if (Auth::user()->hasRole('spv') && !$permintaan->mengetahui)
+            <div class="mt-6">
+                <form action="{{ route('permintaan.spv.setujui', $permintaan->id) }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                        class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 text-sm font-semibold transition">
+                        Mengetahui Permintaan
+                    </button>
+                </form>
+            </div>
+        @endif
+
+        {{-- Tombol Setujui untuk Admin --}}
+        @if (Auth::user()->hasRole('admin') && $permintaan->mengetahui && !$permintaan->approval)
+            <div class="mt-6">
+                <form action="{{ route('permintaan.admin.setujui', $permintaan->id) }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                        class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 text-sm font-semibold transition">
+                        Setujui Permintaan
+                    </button>
+                </form>
+            </div>
+        @endif
     </div>
 @endsection

@@ -53,24 +53,23 @@
 
                                         {{-- Aksi untuk SPV --}}
                                         @if (Auth::user()->hasRole('spv') && !$item->mengetahui)
-                                            <a href="{{ route('permintaan.spv.detail', $item->id) }}"
+                                            <a href="{{ route('permintaan.detail', $item->id) }}"
                                                 class="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600 text-sm font-semibold transition">
                                                 Lihat
                                             </a>
                                         @endif
 
-
                                         {{-- Aksi untuk Admin --}}
-                                        @if (Auth::user()->hasRole('admin') && $item->mengetahui && !$item->approval)
-                                            <form action="{{ route('permintaan.admin.setujui', $item->id) }}"
-                                                method="POST">
-                                                @csrf
-                                                <button type="submit"
-                                                    class="bg-green-700 text-white px-3 py-1 rounded-lg hover:bg-green-800 text-sm font-semibold transition">
-                                                    Setujui Admin
-                                                </button>
-                                            </form>
+                                        @if (Auth::user()->hasRole('admin'))
+                                            @if ($item->mengetahui && !$item->approval)
+                                                <!-- Tombol Lihat Detail -->
+                                                <a href="{{ route('permintaan.detail', $item->id) }}"
+                                                    class="bg-yellow-600 text-white px-3 py-1 rounded-lg hover:bg-yellow-700 text-sm font-semibold transition">
+                                                    Lihat
+                                                </a>
+                                            @endif
                                         @endif
+
 
                                         @if (
                                             $context === 'laporan' &&

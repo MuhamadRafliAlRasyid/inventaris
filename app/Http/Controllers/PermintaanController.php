@@ -122,16 +122,13 @@ class PermintaanController extends Controller
         abort(403, 'Anda tidak memiliki izin untuk mencetak permintaan ini.');
     }
 
-    public function detailSpv($id)
+    public function detail($id)
     {
         $permintaan = Permintaan::with(['user', 'details.barang'])->findOrFail($id);
 
-        // Pastikan hanya permintaan yang belum disetujui SPV
-        if ($permintaan->mengetahui) {
-            abort(403, 'Permintaan sudah disetujui.');
-        }
 
-        return view('permintaan.detail-spv', compact('permintaan'));
+
+        return view('permintaan.detail', compact('permintaan'));
     }
 
 
@@ -157,7 +154,7 @@ class PermintaanController extends Controller
             ->whereNull('mengetahui')
             ->get();
 
-        return view('permintaan.spv-index', compact('permintaans'));
+        return view('permintaan.index', compact('permintaans'));
     }
 
     public function setujuiSpv($id)
@@ -176,14 +173,36 @@ class PermintaanController extends Controller
             ->whereNull('approval')
             ->get();
 
-        return view('permintaan.admin-index', compact('permintaans'));
+        return view('permintaan.index', compact('permintaans'));
     }
 
     public function setujuiAdmin($id)
     {
-        $permintaan = Permintaan::findOrFail($id);
-        $permintaan->update(['approval' => Auth::id()]);
+        $permintaan = Permintaan::with('details.barang')->findOrFail($id);
 
-        return back()->with('success', 'Permintaan disetujui oleh Admin.');
+        // Cek apakah sudah diketahui SPV dan belum disetujui admin
+        if (!$permintaan->mengetahui || $permintaan->approval) {
+            return redirect()->back()->with('error', 'Permintaan tidak valid untuk disetujui.');
+        }
+
+        // Kurangi stok barang
+        foreach ($permintaan->details as $detail) {
+            $barang = $detail->barang;
+
+            // Cek apakah stok cukup
+            if ($barang->stok < $detail->jumlah) {
+                return redirect()->back()->with('error', "Stok barang '{$barang->nama_barang}' tidak mencukupi.");
+            }
+
+            $barang->stok -= $detail->jumlah;
+            $barang->save();
+        }
+
+        // Update status permintaan
+        $permintaan->approval = Auth::id(); // user yang menyetujui
+        $permintaan->approval_time = now();   // waktu persetujuan
+        $permintaan->save();
+
+        return redirect()->route('permintaan.index')->with('success', 'Permintaan disetujui dan stok barang diperbarui.');
     }
 }

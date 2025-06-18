@@ -16,11 +16,13 @@ return new class extends Migration
             $table->unsignedBigInteger('permintaan_id');
             $table->unsignedBigInteger('barang_id');
             $table->integer('jumlah');
+            $table->string('satuan');
+            $table->date('tanggal');
             $table->string('keterangan')->nullable();
             $table->timestamps();
 
             $table->foreign('permintaan_id')
-                ->references('id')->on('permintaan') // 🟢 Sesuai nama tabel sebenarnya
+                ->references('id')->on('permintaan')
                 ->onDelete('cascade');
 
             $table->foreign('barang_id')

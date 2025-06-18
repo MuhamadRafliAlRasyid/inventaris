@@ -1,5 +1,5 @@
-@extends('layouts.app')
+    @extends('layouts.app')
 
-@section('content')
-    @livewire('permintaan-table', ['context' => 'index'])
-@endsection
+    @section('content')
+        @livewire('permintaan-table', ['context' => 'index'])
+    @endsection

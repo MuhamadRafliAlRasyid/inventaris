@@ -63,6 +63,7 @@ Route::middleware([
 Route::get('/permintaan/user/edit-multiple', [PermintaanController::class, 'editMultiple'])->name('permintaan.user.editMultiple');
 Route::put('/permintaan/user/update-multiple', [PermintaanController::class, 'updateMultiple'])->name('permintaan.user.updateMultiple');
 Route::get('/permintaan/{id}/cetak', [PermintaanController::class, 'cetak'])->name('permintaan.cetak');
+Route::get('/permintaan/detail/{id}', [PermintaanController::class, 'detail'])->name('permintaan.detail');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/permintaan', [PermintaanController::class, 'indexUser'])->name('permintaan.index');
@@ -86,7 +87,6 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 Route::middleware(['auth', 'role:spv'])->group(function () {
     Route::get('/permintaan/spv', [PermintaanController::class, 'indexSpv'])->name('permintaan.spv.index');
     Route::post('/permintaan/spv/setujui/{id}', [PermintaanController::class, 'setujuiSpv'])->name('permintaan.spv.setujui');
-    Route::get('/permintaan/spv/detail/{id}', [PermintaanController::class, 'detailSpv'])->name('permintaan.spv.detail');
 });
 
 // Admin - Menyetujui permintaan final

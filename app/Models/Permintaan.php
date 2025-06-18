@@ -15,6 +15,9 @@ class Permintaan extends Model
         'user_id',
         'mengetahui',
         'approval',
+        'satuan',
+        'tanggal',
+        'keterangan',
     ];
     public function details()
     {
